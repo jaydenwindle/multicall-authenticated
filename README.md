@@ -1,6 +1,6 @@
 <div align="center">
 
-<h1>Multicall3</h1>
+<h1>Multicall3 Authenticated</h1>
 
 <a href="">![tests](https://github.com/mds1/multicall/actions/workflows/tests.yml/badge.svg)</a>
 <a href="">![coverage](https://img.shields.io/badge/Coverage-100%25-brightgreen)</a>
@@ -8,9 +8,9 @@
 
 </div>
 
-[`Multicall3`](./src/Multicall3.sol) is deployed on over 70+ chains at `0xcA11bde05977b3631167028862bE2a173976CA11`.
-The full list of deployed chains along with the Multicall3 ABI can be found at https://multicall3.com.
-The ABI is provided in various formats, and can be copied to your clipboard or downloaded to a file.
+This repo contains a fork of Multicall3 with support for authenticated calls. The value of `msg.sender` is appended to the calldata of each call in the style of ERC-2771, allowing contract recipients to verify the multicall sender.
+
+The authenticated version of Multicall3 can be deployed at `0xca11de82fba61CC4D63564391B063072f6a3eA05` on any chain using the `DeployMulticall3.s.sol` script.
 
 Multicall3 is the primary contract in this repository, and **is recommended for all use cases**[^1].
 

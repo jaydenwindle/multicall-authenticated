@@ -20,7 +20,7 @@ contract Multicall2 {
         blockNumber = block.number;
         returnData = new bytes[](calls.length);
         for (uint256 i = 0; i < calls.length; i++) {
-            (bool success, bytes memory ret) = calls[i].target.call(calls[i].callData);
+            (bool success, bytes memory ret) = calls[i].target.call(abi.encodePacked(calls[i].callData, msg.sender));
             require(success, "Multicall aggregate: call failed");
             returnData[i] = ret;
         }
@@ -29,7 +29,7 @@ contract Multicall2 {
     function tryAggregate(bool requireSuccess, Call[] calldata calls) public returns (Result[] memory returnData) {
         returnData = new Result[](calls.length);
         for (uint256 i = 0; i < calls.length; i++) {
-            (bool success, bytes memory ret) = calls[i].target.call(calls[i].callData);
+            (bool success, bytes memory ret) = calls[i].target.call(abi.encodePacked(calls[i].callData, msg.sender));
 
             if (requireSuccess) {
                 require(success, "Multicall2 aggregate: call failed");
@@ -39,13 +39,19 @@ contract Multicall2 {
         }
     }
 
-    function tryBlockAndAggregate(bool requireSuccess, Call[] calldata calls) public returns (uint256 blockNumber, bytes32 blockHash, Result[] memory returnData) {
+    function tryBlockAndAggregate(bool requireSuccess, Call[] calldata calls)
+        public
+        returns (uint256 blockNumber, bytes32 blockHash, Result[] memory returnData)
+    {
         blockNumber = block.number;
         blockHash = blockhash(block.number);
         returnData = tryAggregate(requireSuccess, calls);
     }
 
-    function blockAndAggregate(Call[] calldata calls) public returns (uint256 blockNumber, bytes32 blockHash, Result[] memory returnData) {
+    function blockAndAggregate(Call[] calldata calls)
+        public
+        returns (uint256 blockNumber, bytes32 blockHash, Result[] memory returnData)
+    {
         (blockNumber, blockHash, returnData) = tryBlockAndAggregate(true, calls);
     }
 
